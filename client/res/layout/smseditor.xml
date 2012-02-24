@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingBottom="3dip"
+    android:paddingLeft="6dip"
+    android:paddingRight="6dip" >
+
+    <EditText
+        android:id="@+id/receiver"
+        android:hint="@string/hint_receiver"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:layout_marginTop="2dp"
+        android:autoText="true"
+        android:ems="25"
+        android:maxLines="1"
+        android:scrollHorizontally="true" />
+
+    <EditText
+        android:id="@+id/content"
+        android:hint="@string/hint_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:layout_marginTop="2dp"
+        android:autoText="true"
+        android:ems="25"
+        android:maxLines="1"
+        android:scrollHorizontally="true" />
+    
+    <Button
+        android:id="@+id/ok"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:onClick="onClickOk"
+        android:text="@string/button_send" />
+
+</LinearLayout>

@@ -10,6 +10,7 @@ include_once $GLOBALS['THRIFT_ROOT'].'/packages/inc/inc_types.php';
 
 interface MsgSwitchServiceIf {
   public function test();
+  public function sendsms($sender, $recvVendor, $recvNumber, $content);
 }
 
 class MsgSwitchServiceClient implements MsgSwitchServiceIf {
@@ -71,6 +72,63 @@ class MsgSwitchServiceClient implements MsgSwitchServiceIf {
       throw $result->ex;
     }
     return;
+  }
+
+  public function sendsms($sender, $recvVendor, $recvNumber, $content)
+  {
+    $this->send_sendsms($sender, $recvVendor, $recvNumber, $content);
+    return $this->recv_sendsms();
+  }
+
+  public function send_sendsms($sender, $recvVendor, $recvNumber, $content)
+  {
+    $args = new MsgSwitchService_sendsms_args();
+    $args->sender = $sender;
+    $args->recvVendor = $recvVendor;
+    $args->recvNumber = $recvNumber;
+    $args->content = $content;
+    $bin_accel = ($this->output_ instanceof TProtocol::$TBINARYPROTOCOLACCELERATED) && function_exists('thrift_protocol_write_binary');
+    if ($bin_accel)
+    {
+      thrift_protocol_write_binary($this->output_, 'sendsms', TMessageType::CALL, $args, $this->seqid_, $this->output_->isStrictWrite());
+    }
+    else
+    {
+      $this->output_->writeMessageBegin('sendsms', TMessageType::CALL, $this->seqid_);
+      $args->write($this->output_);
+      $this->output_->writeMessageEnd();
+      $this->output_->getTransport()->flush();
+    }
+  }
+
+  public function recv_sendsms()
+  {
+    $bin_accel = ($this->input_ instanceof TProtocol::$TBINARYPROTOCOLACCELERATED) && function_exists('thrift_protocol_read_binary');
+    if ($bin_accel) $result = thrift_protocol_read_binary($this->input_, 'MsgSwitchService_sendsms_result', $this->input_->isStrictRead());
+    else
+    {
+      $rseqid = 0;
+      $fname = null;
+      $mtype = 0;
+
+      $this->input_->readMessageBegin($fname, $mtype, $rseqid);
+      if ($mtype == TMessageType::EXCEPTION) {
+        $x = new TApplicationException();
+        $x->read($this->input_);
+        $this->input_->readMessageEnd();
+        throw $x;
+      }
+      $result = new MsgSwitchService_sendsms_result();
+      $result->read($this->input_);
+      $this->input_->readMessageEnd();
+    }
+    if ($result->success !== null) {
+      return $result->success;
+    }
+    if ($result->ex !== null) {
+      throw $result->ex;
+    }
+    throw new Exception("sendsms failed: unknown result");
   }
 
 }
@@ -189,6 +247,232 @@ class MsgSwitchService_test_result {
   public function write($output) {
     $xfer = 0;
     $xfer += $output->writeStructBegin('MsgSwitchService_test_result');
+    if ($this->ex !== null) {
+      $xfer += $output->writeFieldBegin('ex', TType::STRUCT, 1);
+      $xfer += $this->ex->write($output);
+      $xfer += $output->writeFieldEnd();
+    }
+    $xfer += $output->writeFieldStop();
+    $xfer += $output->writeStructEnd();
+    return $xfer;
+  }
+
+}
+
+class MsgSwitchService_sendsms_args {
+  static $_TSPEC;
+
+  public $sender = null;
+  public $recvVendor = null;
+  public $recvNumber = null;
+  public $content = null;
+
+  public function __construct($vals=null) {
+    if (!isset(self::$_TSPEC)) {
+      self::$_TSPEC = array(
+        1 => array(
+          'var' => 'sender',
+          'type' => TType::STRING,
+          ),
+        2 => array(
+          'var' => 'recvVendor',
+          'type' => TType::STRING,
+          ),
+        3 => array(
+          'var' => 'recvNumber',
+          'type' => TType::STRING,
+          ),
+        4 => array(
+          'var' => 'content',
+          'type' => TType::STRING,
+          ),
+        );
+    }
+    if (is_array($vals)) {
+      if (isset($vals['sender'])) {
+        $this->sender = $vals['sender'];
+      }
+      if (isset($vals['recvVendor'])) {
+        $this->recvVendor = $vals['recvVendor'];
+      }
+      if (isset($vals['recvNumber'])) {
+        $this->recvNumber = $vals['recvNumber'];
+      }
+      if (isset($vals['content'])) {
+        $this->content = $vals['content'];
+      }
+    }
+  }
+
+  public function getName() {
+    return 'MsgSwitchService_sendsms_args';
+  }
+
+  public function read($input)
+  {
+    $xfer = 0;
+    $fname = null;
+    $ftype = 0;
+    $fid = 0;
+    $xfer += $input->readStructBegin($fname);
+    while (true)
+    {
+      $xfer += $input->readFieldBegin($fname, $ftype, $fid);
+      if ($ftype == TType::STOP) {
+        break;
+      }
+      switch ($fid)
+      {
+        case 1:
+          if ($ftype == TType::STRING) {
+            $xfer += $input->readString($this->sender);
+          } else {
+            $xfer += $input->skip($ftype);
+          }
+          break;
+        case 2:
+          if ($ftype == TType::STRING) {
+            $xfer += $input->readString($this->recvVendor);
+          } else {
+            $xfer += $input->skip($ftype);
+          }
+          break;
+        case 3:
+          if ($ftype == TType::STRING) {
+            $xfer += $input->readString($this->recvNumber);
+          } else {
+            $xfer += $input->skip($ftype);
+          }
+          break;
+        case 4:
+          if ($ftype == TType::STRING) {
+            $xfer += $input->readString($this->content);
+          } else {
+            $xfer += $input->skip($ftype);
+          }
+          break;
+        default:
+          $xfer += $input->skip($ftype);
+          break;
+      }
+      $xfer += $input->readFieldEnd();
+    }
+    $xfer += $input->readStructEnd();
+    return $xfer;
+  }
+
+  public function write($output) {
+    $xfer = 0;
+    $xfer += $output->writeStructBegin('MsgSwitchService_sendsms_args');
+    if ($this->sender !== null) {
+      $xfer += $output->writeFieldBegin('sender', TType::STRING, 1);
+      $xfer += $output->writeString($this->sender);
+      $xfer += $output->writeFieldEnd();
+    }
+    if ($this->recvVendor !== null) {
+      $xfer += $output->writeFieldBegin('recvVendor', TType::STRING, 2);
+      $xfer += $output->writeString($this->recvVendor);
+      $xfer += $output->writeFieldEnd();
+    }
+    if ($this->recvNumber !== null) {
+      $xfer += $output->writeFieldBegin('recvNumber', TType::STRING, 3);
+      $xfer += $output->writeString($this->recvNumber);
+      $xfer += $output->writeFieldEnd();
+    }
+    if ($this->content !== null) {
+      $xfer += $output->writeFieldBegin('content', TType::STRING, 4);
+      $xfer += $output->writeString($this->content);
+      $xfer += $output->writeFieldEnd();
+    }
+    $xfer += $output->writeFieldStop();
+    $xfer += $output->writeStructEnd();
+    return $xfer;
+  }
+
+}
+
+class MsgSwitchService_sendsms_result {
+  static $_TSPEC;
+
+  public $success = null;
+  public $ex = null;
+
+  public function __construct($vals=null) {
+    if (!isset(self::$_TSPEC)) {
+      self::$_TSPEC = array(
+        0 => array(
+          'var' => 'success',
+          'type' => TType::I32,
+          ),
+        1 => array(
+          'var' => 'ex',
+          'type' => TType::STRUCT,
+          'class' => 'FWException',
+          ),
+        );
+    }
+    if (is_array($vals)) {
+      if (isset($vals['success'])) {
+        $this->success = $vals['success'];
+      }
+      if (isset($vals['ex'])) {
+        $this->ex = $vals['ex'];
+      }
+    }
+  }
+
+  public function getName() {
+    return 'MsgSwitchService_sendsms_result';
+  }
+
+  public function read($input)
+  {
+    $xfer = 0;
+    $fname = null;
+    $ftype = 0;
+    $fid = 0;
+    $xfer += $input->readStructBegin($fname);
+    while (true)
+    {
+      $xfer += $input->readFieldBegin($fname, $ftype, $fid);
+      if ($ftype == TType::STOP) {
+        break;
+      }
+      switch ($fid)
+      {
+        case 0:
+          if ($ftype == TType::I32) {
+            $xfer += $input->readI32($this->success);
+          } else {
+            $xfer += $input->skip($ftype);
+          }
+          break;
+        case 1:
+          if ($ftype == TType::STRUCT) {
+            $this->ex = new FWException();
+            $xfer += $this->ex->read($input);
+          } else {
+            $xfer += $input->skip($ftype);
+          }
+          break;
+        default:
+          $xfer += $input->skip($ftype);
+          break;
+      }
+      $xfer += $input->readFieldEnd();
+    }
+    $xfer += $input->readStructEnd();
+    return $xfer;
+  }
+
+  public function write($output) {
+    $xfer = 0;
+    $xfer += $output->writeStructBegin('MsgSwitchService_sendsms_result');
+    if ($this->success !== null) {
+      $xfer += $output->writeFieldBegin('success', TType::I32, 0);
+      $xfer += $output->writeI32($this->success);
+      $xfer += $output->writeFieldEnd();
+    }
     if ($this->ex !== null) {
       $xfer += $output->writeFieldBegin('ex', TType::STRUCT, 1);
       $xfer += $this->ex->write($output);

@@ -26,11 +26,15 @@ public class MsgSwitchService {
 
     public void test() throws FWException, org.apache.thrift.TException;
 
+    public int sendsms(String sender, String recvVendor, String recvNumber, String content) throws FWException, org.apache.thrift.TException;
+
   }
 
   public interface AsyncIface {
 
     public void test(org.apache.thrift.async.AsyncMethodCallback<AsyncClient.test_call> resultHandler) throws org.apache.thrift.TException;
+
+    public void sendsms(String sender, String recvVendor, String recvNumber, String content, org.apache.thrift.async.AsyncMethodCallback<AsyncClient.sendsms_call> resultHandler) throws org.apache.thrift.TException;
 
   }
 
@@ -106,6 +110,48 @@ public class MsgSwitchService {
       return;
     }
 
+    public int sendsms(String sender, String recvVendor, String recvNumber, String content) throws FWException, org.apache.thrift.TException
+    {
+      send_sendsms(sender, recvVendor, recvNumber, content);
+      return recv_sendsms();
+    }
+
+    public void send_sendsms(String sender, String recvVendor, String recvNumber, String content) throws org.apache.thrift.TException
+    {
+      oprot_.writeMessageBegin(new org.apache.thrift.protocol.TMessage("sendsms", org.apache.thrift.protocol.TMessageType.CALL, ++seqid_));
+      sendsms_args args = new sendsms_args();
+      args.setSender(sender);
+      args.setRecvVendor(recvVendor);
+      args.setRecvNumber(recvNumber);
+      args.setContent(content);
+      args.write(oprot_);
+      oprot_.writeMessageEnd();
+      oprot_.getTransport().flush();
+    }
+
+    public int recv_sendsms() throws FWException, org.apache.thrift.TException
+    {
+      org.apache.thrift.protocol.TMessage msg = iprot_.readMessageBegin();
+      if (msg.type == org.apache.thrift.protocol.TMessageType.EXCEPTION) {
+        org.apache.thrift.TApplicationException x = org.apache.thrift.TApplicationException.read(iprot_);
+        iprot_.readMessageEnd();
+        throw x;
+      }
+      if (msg.seqid != seqid_) {
+        throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.BAD_SEQUENCE_ID, "sendsms failed: out of sequence response");
+      }
+      sendsms_result result = new sendsms_result();
+      result.read(iprot_);
+      iprot_.readMessageEnd();
+      if (result.isSetSuccess()) {
+        return result.success;
+      }
+      if (result.ex != null) {
+        throw result.ex;
+      }
+      throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "sendsms failed: unknown result");
+    }
+
   }
   public static class AsyncClient extends org.apache.thrift.async.TAsyncClient implements AsyncIface {
     public static class Factory implements org.apache.thrift.async.TAsyncClientFactory<AsyncClient> {
@@ -153,6 +199,47 @@ public class MsgSwitchService {
       }
     }
 
+    public void sendsms(String sender, String recvVendor, String recvNumber, String content, org.apache.thrift.async.AsyncMethodCallback<sendsms_call> resultHandler) throws org.apache.thrift.TException {
+      checkReady();
+      sendsms_call method_call = new sendsms_call(sender, recvVendor, recvNumber, content, resultHandler, this, protocolFactory, transport);
+      this.currentMethod = method_call;
+      manager.call(method_call);
+    }
+
+    public static class sendsms_call extends org.apache.thrift.async.TAsyncMethodCall {
+      private String sender;
+      private String recvVendor;
+      private String recvNumber;
+      private String content;
+      public sendsms_call(String sender, String recvVendor, String recvNumber, String content, org.apache.thrift.async.AsyncMethodCallback<sendsms_call> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+        super(client, protocolFactory, transport, resultHandler, false);
+        this.sender = sender;
+        this.recvVendor = recvVendor;
+        this.recvNumber = recvNumber;
+        this.content = content;
+      }
+
+      public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
+        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("sendsms", org.apache.thrift.protocol.TMessageType.CALL, 0));
+        sendsms_args args = new sendsms_args();
+        args.setSender(sender);
+        args.setRecvVendor(recvVendor);
+        args.setRecvNumber(recvNumber);
+        args.setContent(content);
+        args.write(prot);
+        prot.writeMessageEnd();
+      }
+
+      public int getResult() throws FWException, org.apache.thrift.TException {
+        if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
+          throw new IllegalStateException("Method call not finished!");
+        }
+        org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
+        org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
+        return (new Client(prot)).recv_sendsms();
+      }
+    }
+
   }
 
   public static class Processor implements org.apache.thrift.TProcessor {
@@ -161,6 +248,7 @@ public class MsgSwitchService {
     {
       iface_ = iface;
       processMap_.put("test", new test());
+      processMap_.put("sendsms", new sendsms());
     }
 
     protected static interface ProcessFunction {
@@ -219,6 +307,45 @@ public class MsgSwitchService {
           return;
         }
         oprot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("test", org.apache.thrift.protocol.TMessageType.REPLY, seqid));
+        result.write(oprot);
+        oprot.writeMessageEnd();
+        oprot.getTransport().flush();
+      }
+
+    }
+
+    private class sendsms implements ProcessFunction {
+      public void process(int seqid, org.apache.thrift.protocol.TProtocol iprot, org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException
+      {
+        sendsms_args args = new sendsms_args();
+        try {
+          args.read(iprot);
+        } catch (org.apache.thrift.protocol.TProtocolException e) {
+          iprot.readMessageEnd();
+          org.apache.thrift.TApplicationException x = new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.PROTOCOL_ERROR, e.getMessage());
+          oprot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("sendsms", org.apache.thrift.protocol.TMessageType.EXCEPTION, seqid));
+          x.write(oprot);
+          oprot.writeMessageEnd();
+          oprot.getTransport().flush();
+          return;
+        }
+        iprot.readMessageEnd();
+        sendsms_result result = new sendsms_result();
+        try {
+          result.success = iface_.sendsms(args.sender, args.recvVendor, args.recvNumber, args.content);
+          result.setSuccessIsSet(true);
+        } catch (FWException ex) {
+          result.ex = ex;
+        } catch (Throwable th) {
+          LOGGER.error("Internal error processing sendsms", th);
+          org.apache.thrift.TApplicationException x = new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.INTERNAL_ERROR, "Internal error processing sendsms");
+          oprot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("sendsms", org.apache.thrift.protocol.TMessageType.EXCEPTION, seqid));
+          x.write(oprot);
+          oprot.writeMessageEnd();
+          oprot.getTransport().flush();
+          return;
+        }
+        oprot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("sendsms", org.apache.thrift.protocol.TMessageType.REPLY, seqid));
         result.write(oprot);
         oprot.writeMessageEnd();
         oprot.getTransport().flush();
@@ -719,6 +846,957 @@ public class MsgSwitchService {
 
     private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException {
       try {
+        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+  }
+
+  public static class sendsms_args implements org.apache.thrift.TBase<sendsms_args, sendsms_args._Fields>, java.io.Serializable, Cloneable   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("sendsms_args");
+
+    private static final org.apache.thrift.protocol.TField SENDER_FIELD_DESC = new org.apache.thrift.protocol.TField("sender", org.apache.thrift.protocol.TType.STRING, (short)1);
+    private static final org.apache.thrift.protocol.TField RECV_VENDOR_FIELD_DESC = new org.apache.thrift.protocol.TField("recvVendor", org.apache.thrift.protocol.TType.STRING, (short)2);
+    private static final org.apache.thrift.protocol.TField RECV_NUMBER_FIELD_DESC = new org.apache.thrift.protocol.TField("recvNumber", org.apache.thrift.protocol.TType.STRING, (short)3);
+    private static final org.apache.thrift.protocol.TField CONTENT_FIELD_DESC = new org.apache.thrift.protocol.TField("content", org.apache.thrift.protocol.TType.STRING, (short)4);
+
+    public String sender;
+    public String recvVendor;
+    public String recvNumber;
+    public String content;
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
+      SENDER((short)1, "sender"),
+      RECV_VENDOR((short)2, "recvVendor"),
+      RECV_NUMBER((short)3, "recvNumber"),
+      CONTENT((short)4, "content");
+
+      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+      static {
+        for (_Fields field : EnumSet.allOf(_Fields.class)) {
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        switch(fieldId) {
+          case 1: // SENDER
+            return SENDER;
+          case 2: // RECV_VENDOR
+            return RECV_VENDOR;
+          case 3: // RECV_NUMBER
+            return RECV_NUMBER;
+          case 4: // CONTENT
+            return CONTENT;
+          default:
+            return null;
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final String _fieldName;
+
+      _Fields(short thriftId, String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public String getFieldName() {
+        return _fieldName;
+      }
+    }
+
+    // isset id assignments
+
+    public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
+    static {
+      Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      tmpMap.put(_Fields.SENDER, new org.apache.thrift.meta_data.FieldMetaData("sender", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
+      tmpMap.put(_Fields.RECV_VENDOR, new org.apache.thrift.meta_data.FieldMetaData("recvVendor", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
+      tmpMap.put(_Fields.RECV_NUMBER, new org.apache.thrift.meta_data.FieldMetaData("recvNumber", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
+      tmpMap.put(_Fields.CONTENT, new org.apache.thrift.meta_data.FieldMetaData("content", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
+      metaDataMap = Collections.unmodifiableMap(tmpMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(sendsms_args.class, metaDataMap);
+    }
+
+    public sendsms_args() {
+    }
+
+    public sendsms_args(
+      String sender,
+      String recvVendor,
+      String recvNumber,
+      String content)
+    {
+      this();
+      this.sender = sender;
+      this.recvVendor = recvVendor;
+      this.recvNumber = recvNumber;
+      this.content = content;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public sendsms_args(sendsms_args other) {
+      if (other.isSetSender()) {
+        this.sender = other.sender;
+      }
+      if (other.isSetRecvVendor()) {
+        this.recvVendor = other.recvVendor;
+      }
+      if (other.isSetRecvNumber()) {
+        this.recvNumber = other.recvNumber;
+      }
+      if (other.isSetContent()) {
+        this.content = other.content;
+      }
+    }
+
+    public sendsms_args deepCopy() {
+      return new sendsms_args(this);
+    }
+
+    @Override
+    public void clear() {
+      this.sender = null;
+      this.recvVendor = null;
+      this.recvNumber = null;
+      this.content = null;
+    }
+
+    public String getSender() {
+      return this.sender;
+    }
+
+    public sendsms_args setSender(String sender) {
+      this.sender = sender;
+      return this;
+    }
+
+    public void unsetSender() {
+      this.sender = null;
+    }
+
+    /** Returns true if field sender is set (has been assigned a value) and false otherwise */
+    public boolean isSetSender() {
+      return this.sender != null;
+    }
+
+    public void setSenderIsSet(boolean value) {
+      if (!value) {
+        this.sender = null;
+      }
+    }
+
+    public String getRecvVendor() {
+      return this.recvVendor;
+    }
+
+    public sendsms_args setRecvVendor(String recvVendor) {
+      this.recvVendor = recvVendor;
+      return this;
+    }
+
+    public void unsetRecvVendor() {
+      this.recvVendor = null;
+    }
+
+    /** Returns true if field recvVendor is set (has been assigned a value) and false otherwise */
+    public boolean isSetRecvVendor() {
+      return this.recvVendor != null;
+    }
+
+    public void setRecvVendorIsSet(boolean value) {
+      if (!value) {
+        this.recvVendor = null;
+      }
+    }
+
+    public String getRecvNumber() {
+      return this.recvNumber;
+    }
+
+    public sendsms_args setRecvNumber(String recvNumber) {
+      this.recvNumber = recvNumber;
+      return this;
+    }
+
+    public void unsetRecvNumber() {
+      this.recvNumber = null;
+    }
+
+    /** Returns true if field recvNumber is set (has been assigned a value) and false otherwise */
+    public boolean isSetRecvNumber() {
+      return this.recvNumber != null;
+    }
+
+    public void setRecvNumberIsSet(boolean value) {
+      if (!value) {
+        this.recvNumber = null;
+      }
+    }
+
+    public String getContent() {
+      return this.content;
+    }
+
+    public sendsms_args setContent(String content) {
+      this.content = content;
+      return this;
+    }
+
+    public void unsetContent() {
+      this.content = null;
+    }
+
+    /** Returns true if field content is set (has been assigned a value) and false otherwise */
+    public boolean isSetContent() {
+      return this.content != null;
+    }
+
+    public void setContentIsSet(boolean value) {
+      if (!value) {
+        this.content = null;
+      }
+    }
+
+    public void setFieldValue(_Fields field, Object value) {
+      switch (field) {
+      case SENDER:
+        if (value == null) {
+          unsetSender();
+        } else {
+          setSender((String)value);
+        }
+        break;
+
+      case RECV_VENDOR:
+        if (value == null) {
+          unsetRecvVendor();
+        } else {
+          setRecvVendor((String)value);
+        }
+        break;
+
+      case RECV_NUMBER:
+        if (value == null) {
+          unsetRecvNumber();
+        } else {
+          setRecvNumber((String)value);
+        }
+        break;
+
+      case CONTENT:
+        if (value == null) {
+          unsetContent();
+        } else {
+          setContent((String)value);
+        }
+        break;
+
+      }
+    }
+
+    public Object getFieldValue(_Fields field) {
+      switch (field) {
+      case SENDER:
+        return getSender();
+
+      case RECV_VENDOR:
+        return getRecvVendor();
+
+      case RECV_NUMBER:
+        return getRecvNumber();
+
+      case CONTENT:
+        return getContent();
+
+      }
+      throw new IllegalStateException();
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      if (field == null) {
+        throw new IllegalArgumentException();
+      }
+
+      switch (field) {
+      case SENDER:
+        return isSetSender();
+      case RECV_VENDOR:
+        return isSetRecvVendor();
+      case RECV_NUMBER:
+        return isSetRecvNumber();
+      case CONTENT:
+        return isSetContent();
+      }
+      throw new IllegalStateException();
+    }
+
+    @Override
+    public boolean equals(Object that) {
+      if (that == null)
+        return false;
+      if (that instanceof sendsms_args)
+        return this.equals((sendsms_args)that);
+      return false;
+    }
+
+    public boolean equals(sendsms_args that) {
+      if (that == null)
+        return false;
+
+      boolean this_present_sender = true && this.isSetSender();
+      boolean that_present_sender = true && that.isSetSender();
+      if (this_present_sender || that_present_sender) {
+        if (!(this_present_sender && that_present_sender))
+          return false;
+        if (!this.sender.equals(that.sender))
+          return false;
+      }
+
+      boolean this_present_recvVendor = true && this.isSetRecvVendor();
+      boolean that_present_recvVendor = true && that.isSetRecvVendor();
+      if (this_present_recvVendor || that_present_recvVendor) {
+        if (!(this_present_recvVendor && that_present_recvVendor))
+          return false;
+        if (!this.recvVendor.equals(that.recvVendor))
+          return false;
+      }
+
+      boolean this_present_recvNumber = true && this.isSetRecvNumber();
+      boolean that_present_recvNumber = true && that.isSetRecvNumber();
+      if (this_present_recvNumber || that_present_recvNumber) {
+        if (!(this_present_recvNumber && that_present_recvNumber))
+          return false;
+        if (!this.recvNumber.equals(that.recvNumber))
+          return false;
+      }
+
+      boolean this_present_content = true && this.isSetContent();
+      boolean that_present_content = true && that.isSetContent();
+      if (this_present_content || that_present_content) {
+        if (!(this_present_content && that_present_content))
+          return false;
+        if (!this.content.equals(that.content))
+          return false;
+      }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      return 0;
+    }
+
+    public int compareTo(sendsms_args other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+      sendsms_args typedOther = (sendsms_args)other;
+
+      lastComparison = Boolean.valueOf(isSetSender()).compareTo(typedOther.isSetSender());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetSender()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.sender, typedOther.sender);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetRecvVendor()).compareTo(typedOther.isSetRecvVendor());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetRecvVendor()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.recvVendor, typedOther.recvVendor);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetRecvNumber()).compareTo(typedOther.isSetRecvNumber());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetRecvNumber()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.recvNumber, typedOther.recvNumber);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetContent()).compareTo(typedOther.isSetContent());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetContent()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.content, typedOther.content);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      return 0;
+    }
+
+    public _Fields fieldForId(int fieldId) {
+      return _Fields.findByThriftId(fieldId);
+    }
+
+    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
+      org.apache.thrift.protocol.TField field;
+      iprot.readStructBegin();
+      while (true)
+      {
+        field = iprot.readFieldBegin();
+        if (field.type == org.apache.thrift.protocol.TType.STOP) { 
+          break;
+        }
+        switch (field.id) {
+          case 1: // SENDER
+            if (field.type == org.apache.thrift.protocol.TType.STRING) {
+              this.sender = iprot.readString();
+            } else { 
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, field.type);
+            }
+            break;
+          case 2: // RECV_VENDOR
+            if (field.type == org.apache.thrift.protocol.TType.STRING) {
+              this.recvVendor = iprot.readString();
+            } else { 
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, field.type);
+            }
+            break;
+          case 3: // RECV_NUMBER
+            if (field.type == org.apache.thrift.protocol.TType.STRING) {
+              this.recvNumber = iprot.readString();
+            } else { 
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, field.type);
+            }
+            break;
+          case 4: // CONTENT
+            if (field.type == org.apache.thrift.protocol.TType.STRING) {
+              this.content = iprot.readString();
+            } else { 
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, field.type);
+            }
+            break;
+          default:
+            org.apache.thrift.protocol.TProtocolUtil.skip(iprot, field.type);
+        }
+        iprot.readFieldEnd();
+      }
+      iprot.readStructEnd();
+
+      // check for required fields of primitive type, which can't be checked in the validate method
+      validate();
+    }
+
+    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
+      validate();
+
+      oprot.writeStructBegin(STRUCT_DESC);
+      if (this.sender != null) {
+        oprot.writeFieldBegin(SENDER_FIELD_DESC);
+        oprot.writeString(this.sender);
+        oprot.writeFieldEnd();
+      }
+      if (this.recvVendor != null) {
+        oprot.writeFieldBegin(RECV_VENDOR_FIELD_DESC);
+        oprot.writeString(this.recvVendor);
+        oprot.writeFieldEnd();
+      }
+      if (this.recvNumber != null) {
+        oprot.writeFieldBegin(RECV_NUMBER_FIELD_DESC);
+        oprot.writeString(this.recvNumber);
+        oprot.writeFieldEnd();
+      }
+      if (this.content != null) {
+        oprot.writeFieldBegin(CONTENT_FIELD_DESC);
+        oprot.writeString(this.content);
+        oprot.writeFieldEnd();
+      }
+      oprot.writeFieldStop();
+      oprot.writeStructEnd();
+    }
+
+    @Override
+    public String toString() {
+      StringBuilder sb = new StringBuilder("sendsms_args(");
+      boolean first = true;
+
+      sb.append("sender:");
+      if (this.sender == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.sender);
+      }
+      first = false;
+      if (!first) sb.append(", ");
+      sb.append("recvVendor:");
+      if (this.recvVendor == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.recvVendor);
+      }
+      first = false;
+      if (!first) sb.append(", ");
+      sb.append("recvNumber:");
+      if (this.recvNumber == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.recvNumber);
+      }
+      first = false;
+      if (!first) sb.append(", ");
+      sb.append("content:");
+      if (this.content == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.content);
+      }
+      first = false;
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws org.apache.thrift.TException {
+      // check for required fields
+    }
+
+    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
+      try {
+        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException {
+      try {
+        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+  }
+
+  public static class sendsms_result implements org.apache.thrift.TBase<sendsms_result, sendsms_result._Fields>, java.io.Serializable, Cloneable   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("sendsms_result");
+
+    private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.I32, (short)0);
+    private static final org.apache.thrift.protocol.TField EX_FIELD_DESC = new org.apache.thrift.protocol.TField("ex", org.apache.thrift.protocol.TType.STRUCT, (short)1);
+
+    public int success;
+    public FWException ex;
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
+      SUCCESS((short)0, "success"),
+      EX((short)1, "ex");
+
+      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+      static {
+        for (_Fields field : EnumSet.allOf(_Fields.class)) {
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        switch(fieldId) {
+          case 0: // SUCCESS
+            return SUCCESS;
+          case 1: // EX
+            return EX;
+          default:
+            return null;
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final String _fieldName;
+
+      _Fields(short thriftId, String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public String getFieldName() {
+        return _fieldName;
+      }
+    }
+
+    // isset id assignments
+    private static final int __SUCCESS_ISSET_ID = 0;
+    private BitSet __isset_bit_vector = new BitSet(1);
+
+    public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
+    static {
+      Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I32)));
+      tmpMap.put(_Fields.EX, new org.apache.thrift.meta_data.FieldMetaData("ex", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRUCT)));
+      metaDataMap = Collections.unmodifiableMap(tmpMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(sendsms_result.class, metaDataMap);
+    }
+
+    public sendsms_result() {
+    }
+
+    public sendsms_result(
+      int success,
+      FWException ex)
+    {
+      this();
+      this.success = success;
+      setSuccessIsSet(true);
+      this.ex = ex;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public sendsms_result(sendsms_result other) {
+      __isset_bit_vector.clear();
+      __isset_bit_vector.or(other.__isset_bit_vector);
+      this.success = other.success;
+      if (other.isSetEx()) {
+        this.ex = new FWException(other.ex);
+      }
+    }
+
+    public sendsms_result deepCopy() {
+      return new sendsms_result(this);
+    }
+
+    @Override
+    public void clear() {
+      setSuccessIsSet(false);
+      this.success = 0;
+      this.ex = null;
+    }
+
+    public int getSuccess() {
+      return this.success;
+    }
+
+    public sendsms_result setSuccess(int success) {
+      this.success = success;
+      setSuccessIsSet(true);
+      return this;
+    }
+
+    public void unsetSuccess() {
+      __isset_bit_vector.clear(__SUCCESS_ISSET_ID);
+    }
+
+    /** Returns true if field success is set (has been assigned a value) and false otherwise */
+    public boolean isSetSuccess() {
+      return __isset_bit_vector.get(__SUCCESS_ISSET_ID);
+    }
+
+    public void setSuccessIsSet(boolean value) {
+      __isset_bit_vector.set(__SUCCESS_ISSET_ID, value);
+    }
+
+    public FWException getEx() {
+      return this.ex;
+    }
+
+    public sendsms_result setEx(FWException ex) {
+      this.ex = ex;
+      return this;
+    }
+
+    public void unsetEx() {
+      this.ex = null;
+    }
+
+    /** Returns true if field ex is set (has been assigned a value) and false otherwise */
+    public boolean isSetEx() {
+      return this.ex != null;
+    }
+
+    public void setExIsSet(boolean value) {
+      if (!value) {
+        this.ex = null;
+      }
+    }
+
+    public void setFieldValue(_Fields field, Object value) {
+      switch (field) {
+      case SUCCESS:
+        if (value == null) {
+          unsetSuccess();
+        } else {
+          setSuccess((Integer)value);
+        }
+        break;
+
+      case EX:
+        if (value == null) {
+          unsetEx();
+        } else {
+          setEx((FWException)value);
+        }
+        break;
+
+      }
+    }
+
+    public Object getFieldValue(_Fields field) {
+      switch (field) {
+      case SUCCESS:
+        return new Integer(getSuccess());
+
+      case EX:
+        return getEx();
+
+      }
+      throw new IllegalStateException();
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      if (field == null) {
+        throw new IllegalArgumentException();
+      }
+
+      switch (field) {
+      case SUCCESS:
+        return isSetSuccess();
+      case EX:
+        return isSetEx();
+      }
+      throw new IllegalStateException();
+    }
+
+    @Override
+    public boolean equals(Object that) {
+      if (that == null)
+        return false;
+      if (that instanceof sendsms_result)
+        return this.equals((sendsms_result)that);
+      return false;
+    }
+
+    public boolean equals(sendsms_result that) {
+      if (that == null)
+        return false;
+
+      boolean this_present_success = true;
+      boolean that_present_success = true;
+      if (this_present_success || that_present_success) {
+        if (!(this_present_success && that_present_success))
+          return false;
+        if (this.success != that.success)
+          return false;
+      }
+
+      boolean this_present_ex = true && this.isSetEx();
+      boolean that_present_ex = true && that.isSetEx();
+      if (this_present_ex || that_present_ex) {
+        if (!(this_present_ex && that_present_ex))
+          return false;
+        if (!this.ex.equals(that.ex))
+          return false;
+      }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      return 0;
+    }
+
+    public int compareTo(sendsms_result other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+      sendsms_result typedOther = (sendsms_result)other;
+
+      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(typedOther.isSetSuccess());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetSuccess()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.success, typedOther.success);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetEx()).compareTo(typedOther.isSetEx());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetEx()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.ex, typedOther.ex);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      return 0;
+    }
+
+    public _Fields fieldForId(int fieldId) {
+      return _Fields.findByThriftId(fieldId);
+    }
+
+    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
+      org.apache.thrift.protocol.TField field;
+      iprot.readStructBegin();
+      while (true)
+      {
+        field = iprot.readFieldBegin();
+        if (field.type == org.apache.thrift.protocol.TType.STOP) { 
+          break;
+        }
+        switch (field.id) {
+          case 0: // SUCCESS
+            if (field.type == org.apache.thrift.protocol.TType.I32) {
+              this.success = iprot.readI32();
+              setSuccessIsSet(true);
+            } else { 
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, field.type);
+            }
+            break;
+          case 1: // EX
+            if (field.type == org.apache.thrift.protocol.TType.STRUCT) {
+              this.ex = new FWException();
+              this.ex.read(iprot);
+            } else { 
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, field.type);
+            }
+            break;
+          default:
+            org.apache.thrift.protocol.TProtocolUtil.skip(iprot, field.type);
+        }
+        iprot.readFieldEnd();
+      }
+      iprot.readStructEnd();
+
+      // check for required fields of primitive type, which can't be checked in the validate method
+      validate();
+    }
+
+    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
+      oprot.writeStructBegin(STRUCT_DESC);
+
+      if (this.isSetSuccess()) {
+        oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
+        oprot.writeI32(this.success);
+        oprot.writeFieldEnd();
+      } else if (this.isSetEx()) {
+        oprot.writeFieldBegin(EX_FIELD_DESC);
+        this.ex.write(oprot);
+        oprot.writeFieldEnd();
+      }
+      oprot.writeFieldStop();
+      oprot.writeStructEnd();
+    }
+
+    @Override
+    public String toString() {
+      StringBuilder sb = new StringBuilder("sendsms_result(");
+      boolean first = true;
+
+      sb.append("success:");
+      sb.append(this.success);
+      first = false;
+      if (!first) sb.append(", ");
+      sb.append("ex:");
+      if (this.ex == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.ex);
+      }
+      first = false;
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws org.apache.thrift.TException {
+      // check for required fields
+    }
+
+    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
+      try {
+        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException {
+      try {
+        // it doesn't seem like you should have to do this, but java serialization is wacky, and doesn't call the default constructor.
+        __isset_bit_vector = new BitSet(1);
         read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
       } catch (org.apache.thrift.TException te) {
         throw new java.io.IOException(te);

@@ -71,7 +71,7 @@ public class ThriftServiceBase implements ServiceIface {
 		return serviceManager;
 	}
 
-	public void setServiceManager(ServiceManager avatarServiceManager) {
-		this.serviceManager = avatarServiceManager;
+	public void setServiceManager(ServiceManager serviceManager) {
+		this.serviceManager = serviceManager;
 	}
 }

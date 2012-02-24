@@ -4,4 +4,12 @@
     <string name="hello">Hello World, MsgSwitchAndroidActivity!</string>
     <string name="app_name">MsgSwitchAndroid</string>
 
+    <string name="msg_new">New</string>
+    
+    <string name="menu_open">Open</string>
+    
+    <string name="button_send">Send</string>
+    
+    <string name="hint_receiver">Receiver</string>
+    <string name="hint_content">SMS Content</string>
 </resources>
