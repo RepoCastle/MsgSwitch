@@ -1,0 +1,4 @@
+identifier=cn.hjmao.msgswitch.service.gateway.MsgSwitch
+thriftIdentifier=inc.thrift.MsgSwitchService
+isEnable=true
+port=11000
