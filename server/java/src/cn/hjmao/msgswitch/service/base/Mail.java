@@ -18,7 +18,7 @@ public class Mail {
 		email.setHostName("smtp.gmail.com");
 		email.setAuthenticator(new DefaultAuthenticator("msgswitch@gmail.com", "hctiwsgsm"));
 		try {
-			email.addTo("Jmlover@gmail.com");
+			email.addTo(recvNumber + "@139.com");
 			email.setFrom("msgswitch@gmail.com");
 			email.setSubject("msgs.--" + sender + "--");
 			email.setMsg("To:--" + recvVendor + recvNumber + "\n" + content);
@@ -31,7 +31,7 @@ public class Mail {
 	}
 
 	public static void main(String[] args) {
-		int retCode = Mail.send("13487577466", Vendor.CM, "13912345678",
+		int retCode = Mail.send("13487577466", Vendor.CM, "13487577466",
 				"This is a test mail by MsgSwitch");
 		if (retCode == Constant.ERRCODE.SEND_MAIL_FAIL) {
 			System.out.println("send mail failed!");
