@@ -21,14 +21,29 @@ public class SMSModifier {
 	}
 
 	public static String smsBodyPrefix(String sender) {
-		String content = "[ms." + sender + "]:\n";
+		String content = "[msgs." + sender + "]:\n";
 		return content;
+	}
+
+	public static String getSenderFromContent(String content) {
+		String sender = null;
+		int start = content.indexOf("[msgs.");
+		if (start!=-1) {
+			int end = content.substring(start).indexOf("]:") + start;
+			if (end!=-1) {
+				sender = content.substring(start, end);
+			}
+		}
+		if (sender==null || "".equals(sender)) {
+			sender = null;
+		}
+		return sender;
 	}
 
 	public static boolean hasSmsBodyModifiedByMsgFilter(String body) {
 		boolean isModified = false;
 		int index = body.indexOf(':');
-		if (index != -1 && body.substring(0, index + 1).matches("^\\[ms\\..*\\]:")) {
+		if (index != -1 && body.substring(0, index + 1).matches("^\\[msgs\\..*\\]:")) {
 			isModified = true;
 		}
 		return isModified;

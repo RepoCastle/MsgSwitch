@@ -33,6 +33,7 @@ public final class R {
     public static final class string {
         public static final int app_name=0x7f040001;
         public static final int button_send=0x7f040004;
+        public static final int button_sms_notify_OK=0x7f040007;
         public static final int hello=0x7f040000;
         public static final int hint_content=0x7f040006;
         public static final int hint_receiver=0x7f040005;

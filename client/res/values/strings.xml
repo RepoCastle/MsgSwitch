@@ -12,4 +12,6 @@
     
     <string name="hint_receiver">Receiver</string>
     <string name="hint_content">SMS Content</string>
+    
+    <string name="button_sms_notify_OK">OK</string>
 </resources>

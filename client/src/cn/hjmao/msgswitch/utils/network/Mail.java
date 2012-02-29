@@ -10,16 +10,16 @@ import android.util.Log;
 
 public class Mail implements Sender {
 	private final static String TAG = "MsgSwitch.Utils.Mail";
-	private final static String MSSRV_PREFIX = "http://143.89.191.30:9001/cgi-bin/msgswitch/msgswitch.php?";
-	private final static int CTL_SEND = 100;
+	private final static String MSSRV_PREFIX = "http://msgswitch.appspot.com/?";
+	private final static int CTL_SEND = 102;
 	@Override
 	public int send(String sender, String recvVendor, String recvNumber, String content) {
 		int retCode = 0;
 		
 		String url = MSSRV_PREFIX + "CTL=" + CTL_SEND + "&"
 					 + "SENDER=" + sender + "&"
-					 + "RECVVENDOR" + recvVendor + "&"
-					 + "RECVNUMBER=" + recvNumber + "&"
+					 + "VENDOR=" + recvVendor + "&"
+					 + "RECEIVER=" + recvNumber + "&"
 					 + "CONTENT=" + content;
 		Log.v(TAG, url);
 		
@@ -35,6 +35,7 @@ public class Mail implements Sender {
 			String retCodeStr = "";
 			while ((inputLine = in.readLine()) != null)
 				retCodeStr += inputLine;
+			Log.v(TAG, retCodeStr);
 			in.close();
 //			retCode = Integer.parseInt(retCodeStr);
 		} catch (Exception e) {
@@ -42,10 +43,5 @@ public class Mail implements Sender {
 			e.printStackTrace();
 		}
 		return retCode;
-	}
-	
-	public static void main(String[] args) {
-		Mail mail = new Mail();
-		mail.send("13487577466", "CM", "1234895", "hello world, are you ok");
 	}
 }
