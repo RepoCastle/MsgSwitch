@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.telephony.SmsMessage;
 import android.util.Log;
+import cn.hjmao.msgswitch.utils.Message;
 import cn.hjmao.msgswitch.utils.SMSModifier;
 
 public class SMSReceiver extends BroadcastReceiver {
@@ -28,13 +29,15 @@ public class SMSReceiver extends BroadcastReceiver {
 
 			if (messages.length > 0) {
 				String sender = messages[0].getOriginatingAddress();
-				if (sender.matches("^10658138.*")) {
+				if (sender.matches("^10658139.*")) {
 					// FIXME: process it
-					String origSender = SMSModifier.getSenderFromContent(content);
-					SMSModifier.smsInsert(context.getContentResolver(), origSender, content);
-//					this.abortBroadcast();
-//					
-//					Toast.makeText(context, content, Toast.LENGTH_LONG).show();
+					Message message = new Message(content);
+					String origSender = message.getSender();
+					String origContent = message.getContent();
+					if (origSender != null) {
+						SMSModifier.smsInsert(context.getContentResolver(), origSender, origContent);
+						this.abortBroadcast();
+					}
 				}
 			}
 		}

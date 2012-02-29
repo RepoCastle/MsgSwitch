@@ -4,14 +4,17 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLEncoder;
 
 import android.os.StrictMode;
 import android.util.Log;
 
 public class Mail implements Sender {
 	private final static String TAG = "MsgSwitch.Utils.Mail";
-	private final static String MSSRV_PREFIX = "http://msgswitch.appspot.com/?";
+//	private final static String MSSRV_PREFIX = "http://msgswitch.appspot.com/?";
+	private final static String MSSRV_PREFIX = "http://192.168.1.102/cgi-bin/msgswitch/msgswitch.php?";
 	private final static int CTL_SEND = 102;
+	
 	@Override
 	public int send(String sender, String recvVendor, String recvNumber, String content) {
 		int retCode = 0;
@@ -20,7 +23,7 @@ public class Mail implements Sender {
 					 + "SENDER=" + sender + "&"
 					 + "VENDOR=" + recvVendor + "&"
 					 + "RECEIVER=" + recvNumber + "&"
-					 + "CONTENT=" + content;
+					 + "CONTENT=" + URLEncoder.encode(content);
 		Log.v(TAG, url);
 		
 		try {

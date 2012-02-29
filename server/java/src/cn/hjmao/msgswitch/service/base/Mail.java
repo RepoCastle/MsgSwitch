@@ -20,8 +20,8 @@ public class Mail {
 		try {
 			email.addTo(recvNumber + "@139.com");
 			email.setFrom("msgswitch@gmail.com");
-			email.setSubject("msgs.--" + sender + "--");
-			email.setMsg("To:--" + recvVendor + recvNumber + "\n" + content);
+			email.setSubject("[msgs]" + sender + "[/msgs]");
+			email.setMsg(content);
 			email.send();
 		} catch (EmailException e) {
 			e.printStackTrace();

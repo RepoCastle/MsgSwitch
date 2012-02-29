@@ -21,7 +21,7 @@ public class MsgSwitch extends ThriftServiceBase implements
 
 	public int sendsms(String sender, String recvVendorCode, String recvNumber,
 			String content) throws FWException, TException {
-		Logging.info("MsgSwitch::sendsms to " + recvNumber + " ...");
+		Logging.info("MsgSwitch::sendsms to " + recvNumber + " with content of: [" + content + "]");
 		int retCode = 0;
 
 		if (sender == null || sender == "") {

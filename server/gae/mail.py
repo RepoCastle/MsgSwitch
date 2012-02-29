@@ -6,7 +6,7 @@ class Mail:
 
   def send(self, snum, rnum, content):
     mailAddr = str(rnum) + "@139.com"
-    subj = "Mail From "# + snum
+    subj = "[msgs]" + str(snum) + "[/msgs]"
     mail.send_mail(sender="msgswitch@gmail.com",
                    to=mailAddr,
                    subject=subj,

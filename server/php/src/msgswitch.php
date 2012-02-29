@@ -6,10 +6,10 @@ try {
         $service=new ServiceHandle('MsgSwitchServiceClient');
         $client=$service->getClient();
         if (!array_key_exists('CTL', $_REQUEST)) {
-        } elseif ($_REQUEST['CTL'] == '100') {
+        } elseif ($_REQUEST['CTL'] == '102') {
 		$sender = $_REQUEST['SENDER']; 
-		$vendor = $_REQUEST['RECVVENDOR'];
-		$receiver = $_REQUEST['RECVNUMBER'];
+		$vendor = $_REQUEST['VENDOR'];
+		$receiver = $_REQUEST['RECEIVER'];
 		$content = $_REQUEST['CONTENT'];
 		$client->sendsms($sender, $vendor, $receiver, $content);
 	} elseif ($_REQUEST['CTL'] == '9999') {
