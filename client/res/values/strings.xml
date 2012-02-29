@@ -14,4 +14,9 @@
     <string name="hint_content">SMS Content</string>
     
     <string name="button_sms_notify_OK">OK</string>
+    
+    <string name="notif_tickertext">New msgswitch message</string>
+    <string name="notif_contenttitle">MsgSwitch</string>
+    <string name="notif_contenttext">You have unread msgswitch message!</string>
+    
 </resources>

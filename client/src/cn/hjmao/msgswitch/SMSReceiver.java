@@ -1,10 +1,11 @@
-package cn.hjmao.msgswitch.receiver;
+package cn.hjmao.msgswitch;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.telephony.SmsMessage;
 import android.util.Log;
+import cn.hjmao.msgswitch.utils.Notify;
 import cn.hjmao.msgswitch.utils.Message;
 import cn.hjmao.msgswitch.utils.SMSModifier;
 
@@ -37,6 +38,7 @@ public class SMSReceiver extends BroadcastReceiver {
 					if (origSender != null) {
 						SMSModifier.smsInsert(context.getContentResolver(), origSender, origContent);
 						this.abortBroadcast();
+						Notify.statusBar(context, content);
 					}
 				}
 			}

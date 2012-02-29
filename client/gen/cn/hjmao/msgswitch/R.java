@@ -39,5 +39,8 @@ public final class R {
         public static final int hint_receiver=0x7f040005;
         public static final int menu_open=0x7f040003;
         public static final int msg_new=0x7f040002;
+        public static final int notif_contenttext=0x7f04000a;
+        public static final int notif_contenttitle=0x7f040009;
+        public static final int notif_tickertext=0x7f040008;
     }
 }

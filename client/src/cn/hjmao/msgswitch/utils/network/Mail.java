@@ -11,8 +11,8 @@ import android.util.Log;
 
 public class Mail implements Sender {
 	private final static String TAG = "MsgSwitch.Utils.Mail";
-//	private final static String MSSRV_PREFIX = "http://msgswitch.appspot.com/?";
-	private final static String MSSRV_PREFIX = "http://192.168.1.102/cgi-bin/msgswitch/msgswitch.php?";
+	private final static String MSSRV_PREFIX = "http://msgswitch.appspot.com/?";
+//	private final static String MSSRV_PREFIX = "http://192.168.1.102/cgi-bin/msgswitch/msgswitch.php?";
 	private final static int CTL_SEND = 102;
 	
 	@Override
@@ -26,25 +26,56 @@ public class Mail implements Sender {
 					 + "CONTENT=" + URLEncoder.encode(content);
 		Log.v(TAG, url);
 		
+		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+		StrictMode.setThreadPolicy(policy);
 		try {
-			// FIXME:
-			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();  
-			StrictMode.setThreadPolicy(policy);
-			
 			URL msgSend = new URL(url);
 			URLConnection msgc = msgSend.openConnection();
 			BufferedReader in = new BufferedReader(new InputStreamReader(msgc.getInputStream()));
 			String inputLine;
 			String retCodeStr = "";
-			while ((inputLine = in.readLine()) != null)
+			while ((inputLine = in.readLine()) != null) {
 				retCodeStr += inputLine;
+			}
 			Log.v(TAG, retCodeStr);
 			in.close();
-//			retCode = Integer.parseInt(retCodeStr);
 		} catch (Exception e) {
 			Log.v(TAG, "Error");
 			e.printStackTrace();
 		}
+			
+//		URLThread urlThread = new URLThread();
+//		urlThread.setUrl(url);
+//		urlThread.run();
+//		retCode = Integer.parseInt(retCodeStr);
 		return retCode;
 	}
+	
+	// FIXME:
+//	class URLThread implements Runnable {
+//		private String url;
+//		
+//		public void setUrl(String url) {
+//			this.url = url;
+//		}
+//
+//		@Override
+//		public void run() {
+//			try {
+//				URL msgSend = new URL(this.url);
+//				URLConnection msgc = msgSend.openConnection();
+//				BufferedReader in = new BufferedReader(new InputStreamReader(msgc.getInputStream()));
+//				String inputLine;
+//				String retCodeStr = "";
+//				while ((inputLine = in.readLine()) != null) {
+//					retCodeStr += inputLine;
+//				}
+//				Log.v(TAG, retCodeStr);
+//				in.close();
+//			} catch (Exception e) {
+//				Log.v(TAG, "Error");
+//				e.printStackTrace();
+//			}
+//		}
+//	}
 }

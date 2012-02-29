@@ -75,7 +75,7 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name="cn.hjmao.msgswitch.receiver.SMSReceiver" >
+        <receiver android:name="cn.hjmao.msgswitch.SMSReceiver" >
             <intent-filter android:priority="10001" >
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" >
                 </action>
