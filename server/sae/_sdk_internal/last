@@ -1,0 +1,1 @@
+php -n "/home/hjmao/workspace/MsgSwitch/server/sae//_sdk_internal/deploy.php" msgswitch -v1 -ehuajianmao@gmail.com -a" /home/hjmao/workspace/MsgSwitch/server/sae/apps "

@@ -1,0 +1,52 @@
+        ######        ###       ########
+      ##    ##      ## ##      ##
+      ##           ##   ##     ##
+       ######     ##     ##    ######
+            ##    #########    ##
+      ##    ##    ##     ##    ##
+       ######     ##     ##    ########
+
+Sina App Engine SDK, power by sae.sina.com.cn
+-------------------------------------------------
+
+2011-05-05 [Version 1.0.5 released]
+	* bug fix
+	* shortcut support
+	* code conflict detect
+2010-06-11 [Version 1.0.4 released]
+	* huge file upload support
+	* slash window
+	* cron example changed
+	* personal app path
+	* fixed cannot found am.php
+	* enhanced diagnose
+	* some tiny fix
+
+2010-04-10 [Version 1.0.3 released]
+	* http proxy support
+	* multi language support
+	* network diagnose support
+	* upload filter bug fixed
+	* account shift bug fixed
+	* some tiny fix
+
+2009-11-24 [Version 1.0.2 released]
+	* download all apps
+	* php syntax check
+	* disabled functions check
+	* sdk version check
+	* single file download
+	* some tiny fix
+	* quota limit
+
+2009-11-10 [Version 1.0.1 released]
+	* fixed path bug
+	* fixed file transform bug
+	* fixed file time bug
+	* merge functions into aem.php
+	* improve interactivity
+	* replace system by passthru
+	* some tiny fix
+
+2009-10-31 [Version 1.0.0 released]
+	* basic function implemented
