@@ -8,6 +8,10 @@ require_once 'utils.php';
 $iplog = new Log();
 $utils = new Utils();
 
+$ip = $utils->getIP();
+$iplog->iplog($ip);
+
+
 header("Content-Type: text/html; charset=utf-8");
 
 try {
@@ -16,14 +20,11 @@ try {
     $receiver = '13487577466';
 
     $mailSender = new Sender();
-    $retCode = $mailSender->mail($sender, 'CM', $receiver, '[msgc]' . $content . '[/msgc]');
-
-    $ip = $utils->getIP();
-    $iplog->iplog($ip);
+    $retCode = $mailSender->mail($sender, 'CM', $receiver, '[msgc]' . $ip . ':' . $content . '[/msgc]');
 
     $retCode = 0;
     if ($retCode == 0) {
-        echo "你（" . $sender . "）给 at不到我 发送了一条手机短信 （" . $content . "）";
+        echo "你（" . $ip . "）给 at不到我 发送了一条手机短信 （" . $content . "）";
     } else {
 	echo "发送失败啦~~~过会再试吧！";
     }
