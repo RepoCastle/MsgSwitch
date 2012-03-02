@@ -1,10 +1,10 @@
 <?php
-$ctl = $_REQUEST['CTL'];
-echo $ctl;
-$sender = $_REQUEST['SENDER'];
-echo $sender;
-$receiver = $_REQUEST['RECEIVER'];
-echo $receiver;
-$content = $_REQUEST['CONTENT'];
-echo $content;
+require_once 'log.php';
+require_once 'utils.php';
+
+$iplog = new Log();
+$utils = new Utils();
+
+$ip = $utils->getIP();
+echo "Your IP is " . $ip;
 ?>

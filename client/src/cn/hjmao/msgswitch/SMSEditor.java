@@ -16,7 +16,7 @@ public class SMSEditor extends Activity {
 
 	private EditText mReceiverText;
 	private EditText mContentText;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		Log.v(TAG, "onCreate");
