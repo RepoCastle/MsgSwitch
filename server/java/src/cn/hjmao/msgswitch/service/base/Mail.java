@@ -18,7 +18,19 @@ public class Mail {
 		email.setHostName("smtp.gmail.com");
 		email.setAuthenticator(new DefaultAuthenticator("msgswitch@gmail.com", "hctiwsgsm"));
 		try {
-			email.addTo(recvNumber + "@139.com");
+			String toAddr = recvNumber;
+			if (recvVendor.equals(Vendor.CM)) {
+				toAddr += "@139.com";
+			} else if (recvVendor.equals(Vendor.CT)) {
+				toAddr += "@189.cn";
+			} else if (recvVendor.equals(Vendor.CU)) {
+				toAddr += "@wo.com.cn";
+			} else {
+				retCode = Constant.ERRCODE.VENDOR_NOT_SUPPORT;
+				return retCode;
+			}
+			System.out.println("Will send mail to " + toAddr);
+			email.addTo(toAddr);
 			email.setFrom("msgswitch@gmail.com");
 			email.setSubject("[msgs]" + sender + "[/msgs]");
 			email.setMsg(content);

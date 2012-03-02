@@ -17,12 +17,11 @@ public class Mail implements Sender {
 	private final static int CTL_SEND = 102;
 	
 	@Override
-	public int send(String sender, String recvVendor, String recvNumber, String content) {
+	public int send(String sender, String recvNumber, String content) {
 		int retCode = 0;
 		
 		String url = MSSRV_PREFIX + "CTL=" + CTL_SEND + "&"
 					 + "SENDER=" + sender + "&"
-					 + "VENDOR=" + recvVendor + "&"
 					 + "RECEIVER=" + recvNumber + "&"
 					 + "CONTENT=" + URLEncoder.encode(content);
 		Log.v(TAG, url);

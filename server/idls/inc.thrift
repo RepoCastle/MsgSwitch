@@ -8,5 +8,5 @@ exception FWException {
 
 service MsgSwitchService {
 	void test() throws (1:FWException ex),
-	i32 sendsms(1:string sender, 2:string recvVendor, 3:string recvNumber, 4:string content) throws (1:FWException ex),
+	i32 sendsms(1:string sender, 2:string recvNumber, 3:string content) throws (1:FWException ex),
 }

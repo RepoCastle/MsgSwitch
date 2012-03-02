@@ -26,7 +26,7 @@ public class MsgSwitchService {
 
     public void test() throws FWException, org.apache.thrift.TException;
 
-    public int sendsms(String sender, String recvVendor, String recvNumber, String content) throws FWException, org.apache.thrift.TException;
+    public int sendsms(String sender, String recvNumber, String content) throws FWException, org.apache.thrift.TException;
 
   }
 
@@ -34,7 +34,7 @@ public class MsgSwitchService {
 
     public void test(org.apache.thrift.async.AsyncMethodCallback<AsyncClient.test_call> resultHandler) throws org.apache.thrift.TException;
 
-    public void sendsms(String sender, String recvVendor, String recvNumber, String content, org.apache.thrift.async.AsyncMethodCallback<AsyncClient.sendsms_call> resultHandler) throws org.apache.thrift.TException;
+    public void sendsms(String sender, String recvNumber, String content, org.apache.thrift.async.AsyncMethodCallback<AsyncClient.sendsms_call> resultHandler) throws org.apache.thrift.TException;
 
   }
 
@@ -110,18 +110,17 @@ public class MsgSwitchService {
       return;
     }
 
-    public int sendsms(String sender, String recvVendor, String recvNumber, String content) throws FWException, org.apache.thrift.TException
+    public int sendsms(String sender, String recvNumber, String content) throws FWException, org.apache.thrift.TException
     {
-      send_sendsms(sender, recvVendor, recvNumber, content);
+      send_sendsms(sender, recvNumber, content);
       return recv_sendsms();
     }
 
-    public void send_sendsms(String sender, String recvVendor, String recvNumber, String content) throws org.apache.thrift.TException
+    public void send_sendsms(String sender, String recvNumber, String content) throws org.apache.thrift.TException
     {
       oprot_.writeMessageBegin(new org.apache.thrift.protocol.TMessage("sendsms", org.apache.thrift.protocol.TMessageType.CALL, ++seqid_));
       sendsms_args args = new sendsms_args();
       args.setSender(sender);
-      args.setRecvVendor(recvVendor);
       args.setRecvNumber(recvNumber);
       args.setContent(content);
       args.write(oprot_);
@@ -199,22 +198,20 @@ public class MsgSwitchService {
       }
     }
 
-    public void sendsms(String sender, String recvVendor, String recvNumber, String content, org.apache.thrift.async.AsyncMethodCallback<sendsms_call> resultHandler) throws org.apache.thrift.TException {
+    public void sendsms(String sender, String recvNumber, String content, org.apache.thrift.async.AsyncMethodCallback<sendsms_call> resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      sendsms_call method_call = new sendsms_call(sender, recvVendor, recvNumber, content, resultHandler, this, protocolFactory, transport);
+      sendsms_call method_call = new sendsms_call(sender, recvNumber, content, resultHandler, this, protocolFactory, transport);
       this.currentMethod = method_call;
       manager.call(method_call);
     }
 
     public static class sendsms_call extends org.apache.thrift.async.TAsyncMethodCall {
       private String sender;
-      private String recvVendor;
       private String recvNumber;
       private String content;
-      public sendsms_call(String sender, String recvVendor, String recvNumber, String content, org.apache.thrift.async.AsyncMethodCallback<sendsms_call> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      public sendsms_call(String sender, String recvNumber, String content, org.apache.thrift.async.AsyncMethodCallback<sendsms_call> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.sender = sender;
-        this.recvVendor = recvVendor;
         this.recvNumber = recvNumber;
         this.content = content;
       }
@@ -223,7 +220,6 @@ public class MsgSwitchService {
         prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("sendsms", org.apache.thrift.protocol.TMessageType.CALL, 0));
         sendsms_args args = new sendsms_args();
         args.setSender(sender);
-        args.setRecvVendor(recvVendor);
         args.setRecvNumber(recvNumber);
         args.setContent(content);
         args.write(prot);
@@ -332,7 +328,7 @@ public class MsgSwitchService {
         iprot.readMessageEnd();
         sendsms_result result = new sendsms_result();
         try {
-          result.success = iface_.sendsms(args.sender, args.recvVendor, args.recvNumber, args.content);
+          result.success = iface_.sendsms(args.sender, args.recvNumber, args.content);
           result.setSuccessIsSet(true);
         } catch (FWException ex) {
           result.ex = ex;
@@ -858,21 +854,18 @@ public class MsgSwitchService {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("sendsms_args");
 
     private static final org.apache.thrift.protocol.TField SENDER_FIELD_DESC = new org.apache.thrift.protocol.TField("sender", org.apache.thrift.protocol.TType.STRING, (short)1);
-    private static final org.apache.thrift.protocol.TField RECV_VENDOR_FIELD_DESC = new org.apache.thrift.protocol.TField("recvVendor", org.apache.thrift.protocol.TType.STRING, (short)2);
-    private static final org.apache.thrift.protocol.TField RECV_NUMBER_FIELD_DESC = new org.apache.thrift.protocol.TField("recvNumber", org.apache.thrift.protocol.TType.STRING, (short)3);
-    private static final org.apache.thrift.protocol.TField CONTENT_FIELD_DESC = new org.apache.thrift.protocol.TField("content", org.apache.thrift.protocol.TType.STRING, (short)4);
+    private static final org.apache.thrift.protocol.TField RECV_NUMBER_FIELD_DESC = new org.apache.thrift.protocol.TField("recvNumber", org.apache.thrift.protocol.TType.STRING, (short)2);
+    private static final org.apache.thrift.protocol.TField CONTENT_FIELD_DESC = new org.apache.thrift.protocol.TField("content", org.apache.thrift.protocol.TType.STRING, (short)3);
 
     public String sender;
-    public String recvVendor;
     public String recvNumber;
     public String content;
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
       SENDER((short)1, "sender"),
-      RECV_VENDOR((short)2, "recvVendor"),
-      RECV_NUMBER((short)3, "recvNumber"),
-      CONTENT((short)4, "content");
+      RECV_NUMBER((short)2, "recvNumber"),
+      CONTENT((short)3, "content");
 
       private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
 
@@ -889,11 +882,9 @@ public class MsgSwitchService {
         switch(fieldId) {
           case 1: // SENDER
             return SENDER;
-          case 2: // RECV_VENDOR
-            return RECV_VENDOR;
-          case 3: // RECV_NUMBER
+          case 2: // RECV_NUMBER
             return RECV_NUMBER;
-          case 4: // CONTENT
+          case 3: // CONTENT
             return CONTENT;
           default:
             return null;
@@ -941,8 +932,6 @@ public class MsgSwitchService {
       Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
       tmpMap.put(_Fields.SENDER, new org.apache.thrift.meta_data.FieldMetaData("sender", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
-      tmpMap.put(_Fields.RECV_VENDOR, new org.apache.thrift.meta_data.FieldMetaData("recvVendor", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
       tmpMap.put(_Fields.RECV_NUMBER, new org.apache.thrift.meta_data.FieldMetaData("recvNumber", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
       tmpMap.put(_Fields.CONTENT, new org.apache.thrift.meta_data.FieldMetaData("content", org.apache.thrift.TFieldRequirementType.DEFAULT, 
@@ -956,13 +945,11 @@ public class MsgSwitchService {
 
     public sendsms_args(
       String sender,
-      String recvVendor,
       String recvNumber,
       String content)
     {
       this();
       this.sender = sender;
-      this.recvVendor = recvVendor;
       this.recvNumber = recvNumber;
       this.content = content;
     }
@@ -973,9 +960,6 @@ public class MsgSwitchService {
     public sendsms_args(sendsms_args other) {
       if (other.isSetSender()) {
         this.sender = other.sender;
-      }
-      if (other.isSetRecvVendor()) {
-        this.recvVendor = other.recvVendor;
       }
       if (other.isSetRecvNumber()) {
         this.recvNumber = other.recvNumber;
@@ -992,7 +976,6 @@ public class MsgSwitchService {
     @Override
     public void clear() {
       this.sender = null;
-      this.recvVendor = null;
       this.recvNumber = null;
       this.content = null;
     }
@@ -1018,30 +1001,6 @@ public class MsgSwitchService {
     public void setSenderIsSet(boolean value) {
       if (!value) {
         this.sender = null;
-      }
-    }
-
-    public String getRecvVendor() {
-      return this.recvVendor;
-    }
-
-    public sendsms_args setRecvVendor(String recvVendor) {
-      this.recvVendor = recvVendor;
-      return this;
-    }
-
-    public void unsetRecvVendor() {
-      this.recvVendor = null;
-    }
-
-    /** Returns true if field recvVendor is set (has been assigned a value) and false otherwise */
-    public boolean isSetRecvVendor() {
-      return this.recvVendor != null;
-    }
-
-    public void setRecvVendorIsSet(boolean value) {
-      if (!value) {
-        this.recvVendor = null;
       }
     }
 
@@ -1103,14 +1062,6 @@ public class MsgSwitchService {
         }
         break;
 
-      case RECV_VENDOR:
-        if (value == null) {
-          unsetRecvVendor();
-        } else {
-          setRecvVendor((String)value);
-        }
-        break;
-
       case RECV_NUMBER:
         if (value == null) {
           unsetRecvNumber();
@@ -1135,9 +1086,6 @@ public class MsgSwitchService {
       case SENDER:
         return getSender();
 
-      case RECV_VENDOR:
-        return getRecvVendor();
-
       case RECV_NUMBER:
         return getRecvNumber();
 
@@ -1157,8 +1105,6 @@ public class MsgSwitchService {
       switch (field) {
       case SENDER:
         return isSetSender();
-      case RECV_VENDOR:
-        return isSetRecvVendor();
       case RECV_NUMBER:
         return isSetRecvNumber();
       case CONTENT:
@@ -1186,15 +1132,6 @@ public class MsgSwitchService {
         if (!(this_present_sender && that_present_sender))
           return false;
         if (!this.sender.equals(that.sender))
-          return false;
-      }
-
-      boolean this_present_recvVendor = true && this.isSetRecvVendor();
-      boolean that_present_recvVendor = true && that.isSetRecvVendor();
-      if (this_present_recvVendor || that_present_recvVendor) {
-        if (!(this_present_recvVendor && that_present_recvVendor))
-          return false;
-        if (!this.recvVendor.equals(that.recvVendor))
           return false;
       }
 
@@ -1238,16 +1175,6 @@ public class MsgSwitchService {
       }
       if (isSetSender()) {
         lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.sender, typedOther.sender);
-        if (lastComparison != 0) {
-          return lastComparison;
-        }
-      }
-      lastComparison = Boolean.valueOf(isSetRecvVendor()).compareTo(typedOther.isSetRecvVendor());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      if (isSetRecvVendor()) {
-        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.recvVendor, typedOther.recvVendor);
         if (lastComparison != 0) {
           return lastComparison;
         }
@@ -1296,21 +1223,14 @@ public class MsgSwitchService {
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, field.type);
             }
             break;
-          case 2: // RECV_VENDOR
-            if (field.type == org.apache.thrift.protocol.TType.STRING) {
-              this.recvVendor = iprot.readString();
-            } else { 
-              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, field.type);
-            }
-            break;
-          case 3: // RECV_NUMBER
+          case 2: // RECV_NUMBER
             if (field.type == org.apache.thrift.protocol.TType.STRING) {
               this.recvNumber = iprot.readString();
             } else { 
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, field.type);
             }
             break;
-          case 4: // CONTENT
+          case 3: // CONTENT
             if (field.type == org.apache.thrift.protocol.TType.STRING) {
               this.content = iprot.readString();
             } else { 
@@ -1337,11 +1257,6 @@ public class MsgSwitchService {
         oprot.writeString(this.sender);
         oprot.writeFieldEnd();
       }
-      if (this.recvVendor != null) {
-        oprot.writeFieldBegin(RECV_VENDOR_FIELD_DESC);
-        oprot.writeString(this.recvVendor);
-        oprot.writeFieldEnd();
-      }
       if (this.recvNumber != null) {
         oprot.writeFieldBegin(RECV_NUMBER_FIELD_DESC);
         oprot.writeString(this.recvNumber);
@@ -1366,14 +1281,6 @@ public class MsgSwitchService {
         sb.append("null");
       } else {
         sb.append(this.sender);
-      }
-      first = false;
-      if (!first) sb.append(", ");
-      sb.append("recvVendor:");
-      if (this.recvVendor == null) {
-        sb.append("null");
-      } else {
-        sb.append(this.recvVendor);
       }
       first = false;
       if (!first) sb.append(", ");

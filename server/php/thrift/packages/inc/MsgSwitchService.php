@@ -10,7 +10,7 @@ include_once $GLOBALS['THRIFT_ROOT'].'/packages/inc/inc_types.php';
 
 interface MsgSwitchServiceIf {
   public function test();
-  public function sendsms($sender, $recvVendor, $recvNumber, $content);
+  public function sendsms($sender, $recvNumber, $content);
 }
 
 class MsgSwitchServiceClient implements MsgSwitchServiceIf {
@@ -74,17 +74,16 @@ class MsgSwitchServiceClient implements MsgSwitchServiceIf {
     return;
   }
 
-  public function sendsms($sender, $recvVendor, $recvNumber, $content)
+  public function sendsms($sender, $recvNumber, $content)
   {
-    $this->send_sendsms($sender, $recvVendor, $recvNumber, $content);
+    $this->send_sendsms($sender, $recvNumber, $content);
     return $this->recv_sendsms();
   }
 
-  public function send_sendsms($sender, $recvVendor, $recvNumber, $content)
+  public function send_sendsms($sender, $recvNumber, $content)
   {
     $args = new MsgSwitchService_sendsms_args();
     $args->sender = $sender;
-    $args->recvVendor = $recvVendor;
     $args->recvNumber = $recvNumber;
     $args->content = $content;
     $bin_accel = ($this->output_ instanceof TProtocol::$TBINARYPROTOCOLACCELERATED) && function_exists('thrift_protocol_write_binary');
@@ -263,7 +262,6 @@ class MsgSwitchService_sendsms_args {
   static $_TSPEC;
 
   public $sender = null;
-  public $recvVendor = null;
   public $recvNumber = null;
   public $content = null;
 
@@ -275,14 +273,10 @@ class MsgSwitchService_sendsms_args {
           'type' => TType::STRING,
           ),
         2 => array(
-          'var' => 'recvVendor',
-          'type' => TType::STRING,
-          ),
-        3 => array(
           'var' => 'recvNumber',
           'type' => TType::STRING,
           ),
-        4 => array(
+        3 => array(
           'var' => 'content',
           'type' => TType::STRING,
           ),
@@ -291,9 +285,6 @@ class MsgSwitchService_sendsms_args {
     if (is_array($vals)) {
       if (isset($vals['sender'])) {
         $this->sender = $vals['sender'];
-      }
-      if (isset($vals['recvVendor'])) {
-        $this->recvVendor = $vals['recvVendor'];
       }
       if (isset($vals['recvNumber'])) {
         $this->recvNumber = $vals['recvNumber'];
@@ -332,19 +323,12 @@ class MsgSwitchService_sendsms_args {
           break;
         case 2:
           if ($ftype == TType::STRING) {
-            $xfer += $input->readString($this->recvVendor);
-          } else {
-            $xfer += $input->skip($ftype);
-          }
-          break;
-        case 3:
-          if ($ftype == TType::STRING) {
             $xfer += $input->readString($this->recvNumber);
           } else {
             $xfer += $input->skip($ftype);
           }
           break;
-        case 4:
+        case 3:
           if ($ftype == TType::STRING) {
             $xfer += $input->readString($this->content);
           } else {
@@ -369,18 +353,13 @@ class MsgSwitchService_sendsms_args {
       $xfer += $output->writeString($this->sender);
       $xfer += $output->writeFieldEnd();
     }
-    if ($this->recvVendor !== null) {
-      $xfer += $output->writeFieldBegin('recvVendor', TType::STRING, 2);
-      $xfer += $output->writeString($this->recvVendor);
-      $xfer += $output->writeFieldEnd();
-    }
     if ($this->recvNumber !== null) {
-      $xfer += $output->writeFieldBegin('recvNumber', TType::STRING, 3);
+      $xfer += $output->writeFieldBegin('recvNumber', TType::STRING, 2);
       $xfer += $output->writeString($this->recvNumber);
       $xfer += $output->writeFieldEnd();
     }
     if ($this->content !== null) {
-      $xfer += $output->writeFieldBegin('content', TType::STRING, 4);
+      $xfer += $output->writeFieldBegin('content', TType::STRING, 3);
       $xfer += $output->writeString($this->content);
       $xfer += $output->writeFieldEnd();
     }

@@ -10,7 +10,7 @@ import cn.hjmao.msgswitch.utils.network.Mail;
 import cn.hjmao.msgswitch.utils.network.Sender;
 
 public class SMSEditor extends Activity {
-	private static final String senderNum = "13487577466";
+	private static final String senderNum = "10086";
 	private static final String TAG = "SMSEditor";
 	private static Sender sender = new Mail();
 
@@ -41,9 +41,7 @@ public class SMSEditor extends Activity {
 		String recvNumber = mReceiverText.getText().toString();
 		Message message = new Message(senderNum, mContentText.getText().toString());
 		Log.v(TAG, "Sending sms ...");
-		//FIXME: It should be parsed from the number;
-		String recvVendor = "CM";
-		sender.send(senderNum, recvVendor, recvNumber, message.toString());
+		sender.send(senderNum, recvNumber, message.toString());
 		Log.v(TAG, "Done sending sms ...");
 		finish();
 	}

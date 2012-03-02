@@ -8,10 +8,9 @@ try {
         if (!array_key_exists('CTL', $_REQUEST)) {
         } elseif ($_REQUEST['CTL'] == '102') {
 		$sender = $_REQUEST['SENDER']; 
-		$vendor = $_REQUEST['VENDOR'];
 		$receiver = $_REQUEST['RECEIVER'];
 		$content = $_REQUEST['CONTENT'];
-		$client->sendsms($sender, $vendor, $receiver, $content);
+		$client->sendsms($sender, $receiver, $content);
 	} elseif ($_REQUEST['CTL'] == '9999') {
 		$client->test();
 	} else {

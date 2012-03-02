@@ -1,7 +1,7 @@
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
-
 from mail import Mail
+from vendor import Vendor
 
 class MsgSwitch(webapp.RequestHandler):
   def get(self):
@@ -10,13 +10,16 @@ class MsgSwitch(webapp.RequestHandler):
     receiver = self.request.get('RECEIVER')
     content = self.request.get('CONTENT')
 
+    vendor = Vendor()
+
     if ctl == '102':
       sender = Mail()
-      sender.send(sender, receiver, content)
+      sender.send(sender, vendor.parse(receiver), receiver, content)
       self.response.out.write("Done sending mail! " + str(sender) + " " + str(receiver) + " " + str(content))
     elif ctl == '103':
-      self.response.out.write(str(sender))
-      self.response.out.write(str(receiver))
+      self.response.out.write(str(sender) + " ")
+      self.response.out.write(vendor.parse(receiver) + " ")
+      self.response.out.write(str(receiver) + " ")
       self.response.out.write(str(content))
 
 application = webapp.WSGIApplication([('/', MsgSwitch)], debug=True)

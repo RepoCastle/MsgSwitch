@@ -9,6 +9,7 @@ import cn.hjmao.msgswitch.service.ThriftServiceBase;
 import cn.hjmao.msgswitch.service.base.Mail;
 import cn.hjmao.msgswitch.utils.Constant;
 import cn.hjmao.msgswitch.utils.Constant.Vendor;
+import cn.hjmao.msgswitch.utils.Constant.VendorNum;
 import cn.hjmao.msgswitch.utils.Logging;
 
 public class MsgSwitch extends ThriftServiceBase implements
@@ -19,7 +20,7 @@ public class MsgSwitch extends ThriftServiceBase implements
 		Logging.info("MsgSwitch::test ...");
 	}
 
-	public int sendsms(String sender, String recvVendorCode, String recvNumber,
+	public int sendsms(String sender, String recvNumber,
 			String content) throws FWException, TException {
 		Logging.info("MsgSwitch::sendsms to " + recvNumber + " with content of: [" + content + "]");
 		int retCode = 0;
@@ -32,7 +33,16 @@ public class MsgSwitch extends ThriftServiceBase implements
 		}
 		Vendor vendor = null;
 		try {
-			vendor = Vendor.valueOf(recvVendorCode);
+			String prefix = recvNumber.substring(0, 3);
+			if (VendorNum.CMPREFIX.contains(prefix)) {
+				vendor = Vendor.CM;
+			} else if (VendorNum.CUPREFIX.contains(prefix)) {
+				vendor = Vendor.CU;
+			} else if (VendorNum.CTPREFIX.contains(prefix)) {
+				vendor = Vendor.CT;
+			} else {
+				retCode = Constant.ERRCODE.RECEIVER_NOT_CORRECT;
+			}
 		} catch (Exception e) {
 			retCode = Constant.ERRCODE.RECEIVER_NOT_CORRECT;
 		}
